@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Admin - Manage Stock{% endblock %}
+
+{% block content %}
+    <h1>Inventory Management</h1>
+
+    <h2>Add New Stock</h2>
+    <form method="post" action="{{ url_for('add_medicine') }}" class="admin-form">
+        <input type="text" name="name" placeholder="Medicine name" required>
+        <input type="text" name="dosage" placeholder="Dosage (e.g. 500mg)" required>
+        <input type="number" name="quantity" placeholder="Quantity" min="0" required>
+        <input type="number" step="0.01" name="unit_price" placeholder="Unit price" min="0" required>
+        <input type="text" name="batch_number" placeholder="Batch number" required>
+        <input type="date" name="expiry_date" required>
+        <select name="supplier_id">
+            <option value="">-- No supplier --</option>
+            {% for s in suppliers %}
+                <option value="{{ s.id }}">{{ s.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add Medicine</button>
+    </form>
+    {% if not suppliers %}
+        <p class="hint">No suppliers yet — <a href="{{ url_for('suppliers') }}">add one</a> to link stock to a vendor (optional).</p>
+    {% endif %}
+
+    <h2>Current Stock</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Dosage</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Batch No.</th>
+                <th>Expiry Date</th>
+                <th>Supplier</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for med in medicines %}
+                {# A <form> can't legally wrap table cells, so it lives outside the row
+                   and connects to its inputs via the "form" attribute (valid HTML5). #}
+                <form id="update-{{ med.id }}" method="post" action="{{ url_for('update_medicine', medicine_id=med.id) }}"></form>
+                <tr class="{% if med.expiry_date < today %}expired-row{% elif med.quantity <= 10 %}low-stock-row{% endif %}">
+                    <td>{{ med.name }}</td>
+                    <td><input form="update-{{ med.id }}" type="text" name="dosage" value="{{ med.dosage }}"></td>
+                    <td><input form="update-{{ med.id }}" type="number" name="quantity" value="{{ med.quantity }}" min="0"></td>
+                    <td><input form="update-{{ med.id }}" type="number" step="0.01" name="unit_price" value="{{ med.unit_price }}" min="0"></td>
+                    <td>{{ med.batch_number }}</td>
+                    <td>{{ med.expiry_date }}</td>
+                    <td>{{ med.supplier_name or "—" }}</td>
+                    <td>
+                        {% if med.expiry_date < today %}
+                            <span class="badge expired">Expired</span>
+                        {% elif med.quantity <= 10 %}
+                            <span class="badge out">Low stock</span>
+                        {% else %}
+                            <span class="badge available">OK</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions-cell">
+                        <button form="update-{{ med.id }}" type="submit">Update</button>
+                        <button form="update-{{ med.id }}" type="submit" formaction="{{ url_for('delete_medicine', medicine_id=med.id) }}" class="danger">Delete</button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="9">No stock added yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <p><a href="{{ url_for('reports_dashboard') }}">&larr; Back to Reports</a></p>
+    <h1>{{ title }}</h1>
+
+    {% if report_type == 'low_stock' %}
+        <form method="get" action="{{ url_for('low_stock_view') }}" class="search-form">
+            <input type="number" name="threshold" value="{{ threshold }}" min="0">
+            <button type="submit">Update Threshold</button>
+        </form>
+    {% endif %}
+
+    <p><a href="{{ url_for('export_report', report_type=report_type) }}">Export CSV</a></p>
+
+    <table>
+        <thead>
+            <tr>
+                {% for col in columns %}
+                    <th>{{ col.replace('_', ' ').title() }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in medicines %}
+                <tr>
+                    {% for col in columns %}
+                        <td>{{ m[col] }}</td>
+                    {% endfor %}
+                </tr>
+            {% else %}
+                <tr><td colspan="{{ columns|length }}">No records found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

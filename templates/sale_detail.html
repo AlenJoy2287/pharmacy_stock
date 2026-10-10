@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Invoice {{ sale.invoice_no }}{% endblock %}
+
+{% block content %}
+    <p><a href="{{ url_for('sales_list') }}">&larr; Back to Sales History</a></p>
+    <h1>Invoice {{ sale.invoice_no }}</h1>
+
+    <table class="detail-table">
+        <tr><th>Customer</th><td>{{ sale.customer_name }}</td></tr>
+        <tr><th>Date</th><td>{{ sale.sale_date }}</td></tr>
+        <tr><th>Status</th>
+            <td>
+                {% if sale.status == 'completed' %}
+                    <span class="badge available">Completed</span>
+                {% else %}
+                    <span class="badge expired">Refunded</span>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <thead>
+            <tr><th>Medicine</th><th>Qty</th><th>Unit Price</th><th>Line Total</th></tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.medicine_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>Rs. {{ "%.2f"|format(item.unit_price) }}</td>
+                    <td>Rs. {{ "%.2f"|format(item.line_total) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="totals-table">
+        <tr><th>Subtotal</th><td>Rs. {{ "%.2f"|format(sale.subtotal) }}</td></tr>
+        <tr><th>Discount</th><td>Rs. {{ "%.2f"|format(sale.discount) }}</td></tr>
+        <tr><th>Tax</th><td>Rs. {{ "%.2f"|format(sale.tax) }}</td></tr>
+        <tr><th>Total</th><td><strong>Rs. {{ "%.2f"|format(sale.total) }}</strong></td></tr>
+    </table>
+
+    <div class="invoice-actions">
+        <a href="{{ url_for('print_invoice', sale_id=sale.id) }}" target="_blank"><button type="button">Print Invoice</button></a>
+        {% if sale.status == 'completed' %}
+            <form method="post" action="{{ url_for('refund_sale', sale_id=sale.id) }}" class="inline-form" onsubmit="return confirm('Refund this sale and restore stock?');">
+                <button type="submit" class="danger">Refund Sale</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

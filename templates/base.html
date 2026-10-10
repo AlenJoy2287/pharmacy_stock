@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Pharmacy Stock{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <span class="brand">💊 Pharmacy Stock</span>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Search</a>
+            <a href="{{ url_for('admin') }}">Inventory</a>
+            <a href="{{ url_for('suppliers') }}">Suppliers</a>
+            <a href="{{ url_for('sales_new') }}">New Sale</a>
+            <a href="{{ url_for('sales_list') }}">Sales History</a>
+            <a href="{{ url_for('reports_dashboard') }}">Reports</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

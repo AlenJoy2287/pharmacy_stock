@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Search Medicine{% endblock %}
+
+{% block content %}
+    <h1>Check Medicine Availability</h1>
+
+    <form method="get" action="{{ url_for('index') }}" class="search-form">
+        <input type="text" name="q" placeholder="Search medicine name..." value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Dosage</th>
+                <th>Quantity</th>
+                <th>Batch No.</th>
+                <th>Expiry Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for med in medicines %}
+                <tr>
+                    <td>{{ med.name }}</td>
+                    <td>{{ med.dosage }}</td>
+                    <td>{{ med.quantity }}</td>
+                    <td>{{ med.batch_number }}</td>
+                    <td>{{ med.expiry_date }}</td>
+                    <td>
+                        {% if med.expiry_date < today %}
+                            <span class="badge expired">Expired</span>
+                        {% elif med.quantity == 0 %}
+                            <span class="badge out">Out of stock</span>
+                        {% else %}
+                            <span class="badge available">Available</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6">No medicines found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ supplier.name }} - Supplier Detail{% endblock %}
+
+{% block content %}
+    <p><a href="{{ url_for('suppliers') }}">&larr; Back to Suppliers</a></p>
+    <h1>{{ supplier.name }}</h1>
+
+    <table class="detail-table">
+        <tr><th>Contact Person</th><td>{{ supplier.contact_person or "—" }}</td></tr>
+        <tr><th>Phone</th><td>{{ supplier.phone or "—" }}</td></tr>
+        <tr><th>Email</th><td>{{ supplier.email or "—" }}</td></tr>
+        <tr><th>Address</th><td>{{ supplier.address or "—" }}</td></tr>
+        <tr><th>Status</th><td>{{ supplier.status }}</td></tr>
+    </table>
+
+    <h2>Stock Supplied</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Medicine</th>
+                <th>Dosage</th>
+                <th>Quantity</th>
+                <th>Batch No.</th>
+                <th>Expiry Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in history %}
+                <tr>
+                    <td>{{ m.name }}</td>
+                    <td>{{ m.dosage }}</td>
+                    <td>{{ m.quantity }}</td>
+                    <td>{{ m.batch_number }}</td>
+                    <td>{{ m.expiry_date }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">No stock linked to this supplier yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

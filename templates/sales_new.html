@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}New Sale{% endblock %}
+
+{% block content %}
+    <h1>New Sale</h1>
+
+    <div class="pos-layout">
+        <div class="pos-medicines">
+            <h2>Available Medicines</h2>
+            <form method="get" action="{{ url_for('sales_new') }}" class="search-form">
+                <input type="text" name="q" placeholder="Search medicine..." value="{{ query }}">
+                <button type="submit">Search</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Dosage</th>
+                        <th>In Stock</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for med in medicines %}
+                        <form id="add-{{ med.id }}" method="post" action="{{ url_for('add_to_cart') }}"></form>
+                        <tr>
+                            <td>{{ med.name }}</td>
+                            <td>{{ med.dosage }}</td>
+                            <td>{{ med.quantity }}</td>
+                            <td>Rs. {{ "%.2f"|format(med.unit_price) }}</td>
+                            <td>
+                                <input form="add-{{ med.id }}" type="hidden" name="medicine_id" value="{{ med.id }}">
+                                <input form="add-{{ med.id }}" type="number" name="quantity" value="1" min="1" max="{{ med.quantity }}" class="qty-input">
+                            </td>
+                            <td><button form="add-{{ med.id }}" type="submit">Add to Cart</button></td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="6">No medicines available for sale (out of stock or expired).</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pos-cart">
+            <h2>Cart</h2>
+            {% if cart %}
+                <table>
+                    <thead>
+                        <tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart %}
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td>
+                                    <form method="post" action="{{ url_for('update_cart_item', medicine_id=item.medicine_id) }}" class="inline-form">
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="qty-input" onchange="this.form.submit()">
+                                    </form>
+                                </td>
+                                <td>Rs. {{ "%.2f"|format(item.unit_price) }}</td>
+                                <td>Rs. {{ "%.2f"|format(item.unit_price * item.quantity) }}</td>
+                                <td>
+                                    <form method="post" action="{{ url_for('remove_from_cart', medicine_id=item.medicine_id) }}" class="inline-form">
+                                        <button type="submit" class="danger">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <p class="subtotal-line">Subtotal: <strong>Rs. {{ "%.2f"|format(subtotal) }}</strong></p>
+
+                <form method="post" action="{{ url_for('checkout') }}" class="checkout-form">
+                    <input type="text" name="customer_name" placeholder="Customer name (optional)">
+                    <input type="number" step="0.01" name="discount" placeholder="Discount (Rs.)" min="0" value="0">
+                    <input type="number" step="0.01" name="tax_percent" placeholder="Tax %" min="0" value="0">
+                    <button type="submit">Checkout &amp; Generate Invoice</button>
+                </form>
+            {% else %}
+                <p>Cart is empty. Add medicines from the list.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

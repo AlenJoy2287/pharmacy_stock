@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+    <h1>Reports &amp; Analytics</h1>
+
+    <div class="cards-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total Medicines</div>
+            <div class="stat-value">{{ total_medicines }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Low Stock Items</div>
+            <div class="stat-value">{{ low_stock_count }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Expired Items</div>
+            <div class="stat-value">{{ expired_count }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Revenue Today</div>
+            <div class="stat-value">Rs. {{ "%.2f"|format(revenue.today) }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Revenue This Week</div>
+            <div class="stat-value">Rs. {{ "%.2f"|format(revenue.week) }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Revenue This Month</div>
+            <div class="stat-value">Rs. {{ "%.2f"|format(revenue.month) }}</div>
+        </div>
+    </div>
+
+    <div class="report-section">
+        <h2>Low Stock (top 5) <a href="{{ url_for('low_stock_view') }}">View all</a> · <a href="{{ url_for('export_report', report_type='low_stock') }}">Export CSV</a></h2>
+        <table>
+            <thead><tr><th>Name</th><th>Dosage</th><th>Quantity</th><th>Batch No.</th></tr></thead>
+            <tbody>
+                {% for m in low_stock %}
+                    <tr><td>{{ m.name }}</td><td>{{ m.dosage }}</td><td>{{ m.quantity }}</td><td>{{ m.batch_number }}</td></tr>
+                {% else %}
+                    <tr><td colspan="4">Nothing low on stock.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-section">
+        <h2>Expired Stock (top 5) <a href="{{ url_for('expired_view') }}">View all</a> · <a href="{{ url_for('export_report', report_type='expired') }}">Export CSV</a></h2>
+        <table>
+            <thead><tr><th>Name</th><th>Dosage</th><th>Quantity</th><th>Expiry Date</th></tr></thead>
+            <tbody>
+                {% for m in expired %}
+                    <tr><td>{{ m.name }}</td><td>{{ m.dosage }}</td><td>{{ m.quantity }}</td><td>{{ m.expiry_date }}</td></tr>
+                {% else %}
+                    <tr><td colspan="4">Nothing expired.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-section">
+        <h2>Top-Selling Medicines <a href="{{ url_for('export_report', report_type='top_selling') }}">Export CSV</a></h2>
+        <table>
+            <thead><tr><th>Medicine</th><th>Units Sold</th><th>Revenue</th></tr></thead>
+            <tbody>
+                {% for r in top_selling %}
+                    <tr><td>{{ r.name }}</td><td>{{ r.total_qty }}</td><td>Rs. {{ "%.2f"|format(r.total_revenue) }}</td></tr>
+                {% else %}
+                    <tr><td colspan="3">No sales recorded yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-section">
+        <h2>Supplier-wise Stock <a href="{{ url_for('export_report', report_type='sales') }}">Export all sales CSV</a></h2>
+        <table>
+            <thead><tr><th>Supplier</th><th>Batches</th><th>Total Quantity</th><th>Stock Value</th></tr></thead>
+            <tbody>
+                {% for s in supplier_totals %}
+                    <tr><td>{{ s.supplier_name }}</td><td>{{ s.batch_count }}</td><td>{{ s.total_quantity }}</td><td>Rs. {{ "%.2f"|format(s.stock_value) }}</td></tr>
+                {% else %}
+                    <tr><td colspan="4">No suppliers yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-section">
+        <h2>Sales Trend (last 7 days)</h2>
+        <table>
+            <thead><tr><th>Date</th><th>Revenue</th></tr></thead>
+            <tbody>
+                {% for t in trend %}
+                    <tr><td>{{ t.date }}</td><td>Rs. {{ "%.2f"|format(t.total) }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

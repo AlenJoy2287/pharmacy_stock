@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice {{ sale.invoice_no }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; color: #1f2933; }
+        h1 { margin-bottom: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        .totals-table { width: 300px; margin-left: auto; margin-top: 16px; }
+        .meta { color: #555; margin-bottom: 20px; }
+        .print-btn { margin-top: 24px; }
+        @media print {
+            .print-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Pharmacy Stock — Invoice</h1>
+    <p class="meta">
+        Invoice No: <strong>{{ sale.invoice_no }}</strong><br>
+        Customer: {{ sale.customer_name }}<br>
+        Date: {{ sale.sale_date }}<br>
+        Status: {{ sale.status }}
+    </p>
+
+    <table>
+        <thead>
+            <tr><th>Medicine</th><th>Qty</th><th>Unit Price</th><th>Line Total</th></tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.medicine_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>Rs. {{ "%.2f"|format(item.unit_price) }}</td>
+                    <td>Rs. {{ "%.2f"|format(item.line_total) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="totals-table">
+        <tr><th>Subtotal</th><td>Rs. {{ "%.2f"|format(sale.subtotal) }}</td></tr>
+        <tr><th>Discount</th><td>Rs. {{ "%.2f"|format(sale.discount) }}</td></tr>
+        <tr><th>Tax</th><td>Rs. {{ "%.2f"|format(sale.tax) }}</td></tr>
+        <tr><th>Total</th><td><strong>Rs. {{ "%.2f"|format(sale.total) }}</strong></td></tr>
+    </table>
+
+    <div class="print-btn">
+        <button onclick="window.print()">Print</button>
+    </div>
+</body>
+</html>

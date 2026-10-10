@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Sales History{% endblock %}
+
+{% block content %}
+    <h1>Sales History</h1>
+
+    <form method="get" action="{{ url_for('sales_list') }}" class="search-form">
+        <input type="text" name="q" placeholder="Search invoice no. or customer..." value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Invoice No.</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in sales %}
+                <tr class="{% if s.status == 'refunded' %}expired-row{% endif %}">
+                    <td><a href="{{ url_for('sale_detail', sale_id=s.id) }}">{{ s.invoice_no }}</a></td>
+                    <td>{{ s.customer_name }}</td>
+                    <td>{{ s.sale_date }}</td>
+                    <td>Rs. {{ "%.2f"|format(s.total) }}</td>
+                    <td>
+                        {% if s.status == 'completed' %}
+                            <span class="badge available">Completed</span>
+                        {% else %}
+                            <span class="badge expired">Refunded</span>
+                        {% endif %}
+                    </td>
+                    <td><a href="{{ url_for('sale_detail', sale_id=s.id) }}">View</a></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6">No sales yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

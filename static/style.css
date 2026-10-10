@@ -1,0 +1,299 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    background: #f4f6f8;
+    color: #1f2933;
+}
+
+.navbar {
+    background: #0b7285;
+    color: white;
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 24px;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-top: 32px;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    color: #334155;
+}
+
+.search-form, .admin-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.search-form input, .admin-form input {
+    padding: 8px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.search-form input {
+    flex: 1;
+    min-width: 200px;
+}
+
+button {
+    background: #0b7285;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+button:hover {
+    background: #095c6b;
+}
+
+button.danger {
+    background: #c92a2a;
+    margin-left: 6px;
+}
+
+button.danger:hover {
+    background: #a51111;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.9rem;
+}
+
+th {
+    background: #edf2f7;
+    font-weight: 600;
+}
+
+tr.expired-row {
+    background: #fff5f5;
+}
+
+td input {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+}
+
+.actions-cell {
+    white-space: nowrap;
+}
+
+.badge {
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.badge.available {
+    background: #d3f9d8;
+    color: #2b8a3e;
+}
+
+.badge.expired {
+    background: #ffe3e3;
+    color: #c92a2a;
+}
+
+.badge.out {
+    background: #fff3bf;
+    color: #997404;
+}
+
+.flash {
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.flash.success {
+    background: #d3f9d8;
+    color: #2b8a3e;
+}
+
+.flash.error {
+    background: #ffe3e3;
+    color: #c92a2a;
+}
+
+/* --- New module styles --- */
+
+.hint {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-top: -12px;
+    margin-bottom: 20px;
+}
+
+tr.low-stock-row {
+    background: #fffbea;
+}
+
+.detail-table {
+    width: auto;
+    margin-bottom: 24px;
+}
+
+.detail-table th {
+    text-align: left;
+    padding-right: 20px;
+    background: none;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.totals-table {
+    width: 300px;
+    margin-left: auto;
+    margin-top: 16px;
+}
+
+.totals-table th {
+    background: none;
+    text-align: left;
+}
+
+.invoice-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.inline-form {
+    display: inline;
+}
+
+/* POS layout */
+.pos-layout {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.pos-cart {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 16px;
+}
+
+.qty-input {
+    width: 60px;
+}
+
+.subtotal-line {
+    text-align: right;
+    font-size: 1.05rem;
+    margin: 12px 0;
+}
+
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.checkout-form input {
+    padding: 8px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+/* Reports dashboard */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0b7285;
+}
+
+.report-section {
+    margin-bottom: 32px;
+}
+
+.report-section h2 a {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #0b7285;
+    margin-left: 10px;
+}
+
+@media (max-width: 800px) {
+    .pos-layout {
+        grid-template-columns: 1fr;
+    }
+}
